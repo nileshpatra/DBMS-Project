@@ -5,6 +5,9 @@ from flask import redirect
 from flask import render_template
 from flask import request
 from flask_sqlalchemy import SQLAlchemy
+from flask import Flask, flash, redirect, render_template, request, session, abort
+import os
+from time import sleep
 
 project_dir = os.path.dirname(os.path.abspath('__file__'))
 database_file = "sqlite:///{}".format(os.path.join(project_dir, "databases/paysys.db"))
@@ -28,6 +31,24 @@ db.create_all()
 
 @app.route('/', methods=["GET", "POST"])
 def home():
+	if not session.get('logged_in'):
+		return render_template('login.html')
+	else:
+		return redirect("/acc")
+
+@app.route('/login', methods=["GET", "POST"])
+def do_admin_login():
+	if request.form['password'] == 'password' and request.form['username'] == 'admin':
+		session['logged_in'] = True
+	else:
+		flash('wrong password!')
+		sleep(2)
+	return redirect("/")
+
+@app.route('/acc', methods=["GET", "POST"])
+def loggedin():
+	if not session.get('logged_in'):
+		return redirect("/")
 	users = None
 	if request.form:
 			try:
@@ -43,6 +64,7 @@ def home():
 				print("Failed to add user")
 				print(e)
 	users = User.query.all()
+	print(users)
 	return render_template("index.html", users=users)
 
 @app.route("/update", methods=["POST"])
@@ -62,11 +84,11 @@ def update():
 			user.pay_amount = pay_amount
 			user.joining_date = joining_date
 			db.session.commit()
-			return redirect("/")
+			return redirect("/acc")
 		except Exception as e:
 			print("Failed to update user")
 			print(e)
-	return redirect("/")
+	return redirect("/acc")
 
 
 @app.route("/delete", methods=["POST"])
@@ -79,11 +101,17 @@ def delete():
 			print(user)
 			db.session.delete(user)
 			db.session.commit()
-			return redirect("/")
+			return redirect("/acc")
 		except Exception as e:
 			print("Failed to delete user")
 			print(e)
+	return redirect("/acc")
+
+@app.route("/logout", methods=["POST"])
+def logout():
+	session['logged_in'] = False
 	return redirect("/")
 
 if __name__ == "__main__":
-    app.run(debug=True)
+	app.secret_key = os.urandom(12)
+	app.run(debug=True)
