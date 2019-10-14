@@ -38,7 +38,7 @@ def home():
 
 @app.route('/login', methods=["GET", "POST"])
 def do_admin_login():
-	if request.form['password'] == 'password' and request.form['username'] == 'admin':
+	if request.form['password'] == '#yoursetpasswd' and request.form['username'] == '#yourunamehere':
 		session['logged_in'] = True
 	else:
 		flash('wrong password!')
