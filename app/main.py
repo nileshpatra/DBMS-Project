@@ -7,6 +7,7 @@ from flask import request
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, flash, redirect, render_template, request, session, abort
 import os
+from datetime import datetime
 from time import sleep
 
 project_dir = os.path.dirname(os.path.abspath('__file__'))
@@ -19,10 +20,10 @@ db = SQLAlchemy(app)
 
 class User(db.Model):
     eid = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), unique=True, nullable=False)
+    name = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    pay_amount = db.Column(db.Integer, primary_key=True)
-    joining_date = db.Column(db.Integer, nullable=False, default=datetime.utcnow)
+    pay_amount = db.Column(db.Integer, nullable=False)
+    joining_date = db.Column(db.Date, nullable=False, default=datetime.utcnow)
 
     def __repr__(self):
         return '<User %r>' % self.name
@@ -57,7 +58,7 @@ def loggedin():
 				mail = request.form["mail"]
 				pay_amount = request.form["pay_amount"]
 				joining_date = request.form["doj"]
-				user = User(eid= eid , name= name , email= mail , pay_amount = pay_amount , joining_date = joining_date)
+				user = User(eid= eid , name= name , email= mail , pay_amount = pay_amount , joining_date = datetime(int(joining_date[6:]),int(joining_date[3:5]),int(joining_date[0:2])))
 				db.session.add(user)
 				db.session.commit()
 			except Exception as e:
@@ -78,11 +79,12 @@ def update():
 			pay_amount = request.form["update_pay_amount"]
 			joining_date = request.form["update_doj"]
 			user = User.query.filter_by(eid=oldid).first()
-			user.eid = eid
+			if eid != oldid:
+				user.eid = eid
 			user.name = name
 			user.email = mail
 			user.pay_amount = pay_amount
-			user.joining_date = joining_date
+			user.joining_date = datetime(int(joining_date[6:]),int(joining_date[3:5]),int(joining_date[0:2]))
 			db.session.commit()
 			return redirect("/acc")
 		except Exception as e:
