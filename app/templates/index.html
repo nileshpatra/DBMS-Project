@@ -26,7 +26,10 @@
     ></script>
 </head>
   <body>
-    <form method="POST" action="/">
+    <form method="POST" action="./logout">
+      <input type="submit" value="Signout" align="center">
+    </form>
+    <form method="POST" action="/acc">
 
     	<h1><pre>
           _______  _______  _______          ______   _______ _________ _______  ______   _______  _______  _______ 
@@ -59,29 +62,29 @@
 		{% endfor %}
 		</table>
 		<br>
-      <input type="text" name="eid" placeholder="eid">
-      <input type="text" name="name" placeholder="name">
-      <input type="text" name="mail" placeholder="e-mail">
-      <input type="text" name="pay_amount" placeholder="Salary">
-      <input type="text" name="doj" placeholder="join date">
+      <input type="text" name="eid" placeholder="eid" autocomplete="off">
+      <input type="text" name="name" placeholder="name" autocomplete="off">
+      <input type="text" name="mail" placeholder="e-mail" autocomplete="off">
+      <input type="text" name="pay_amount" placeholder="Salary" autocomplete="off">
+      <input type="text" name="doj" placeholder="join date" autocomplete="off">
       <input type="submit" value="Add">
 
     </form>
     <br>
 
   	<form method="POST" action="./update">
-    	<input type="text" name="old_eid" placeholder="old eid">
-    	<input type="text" name="update_eid" placeholder="eid">
-        <input type="text" name="update_name" placeholder="name">
-        <input type="text" name="update_mail" placeholder="email">
-        <input type="text" name="update_pay_amount" placeholder="Salary">
-        <input type="text" name="update_doj" placeholder="join date">
+    	<input type="text" name="old_eid" placeholder="old eid" autocomplete="off">
+    	<input type="text" name="update_eid" placeholder="eid" autocomplete="off">
+        <input type="text" name="update_name" placeholder="name" autocomplete="off">
+        <input type="text" name="update_mail" placeholder="email" autocomplete="off">
+        <input type="text" name="update_pay_amount" placeholder="Salary" autocomplete="off">
+        <input type="text" name="update_doj" placeholder="join date" autocomplete="off">
     	<input type="submit" value="Update">
   	</form>
   	<br>
 
     <form method="POST" action="./delete">
-	<input type="text" name="del_title" placeholder="eno">
+	<input type="text" name="del_title" placeholder="eno" autocomplete="off">
   	<input type="submit" value="Delete">
 	</form>
 
